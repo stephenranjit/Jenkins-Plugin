@@ -1,10 +1,12 @@
 FROM ubuntu
 
-COPY swarm-client-2.1-jar-with-dependencies.jar /tmp/swarm-client-2.1-jar-with-dependencies.jar
 COPY build_artifact_exec.py /tmp/build_artifact_exec.py
 COPY clone_purge.py /tmp/clone_purge.py
 COPY zipForApprenda.py /tmp/zipForApprenda.py
 
+
+
+RUN curl -O http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.1/swarm-client-2.1-jar-with-dependencies.jar
 RUN apt-get update
 RUN apt-get install -y default-jdk
 RUN apt-get install -y git
