@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "storageDriverName": "ontap-nas",
+    "managementLIF": "192.168.50.37",
+    "dataLIF": "192.168.50.35",
+    "svm": "devops-manila",
+    "username": "vsadmin",
+    "password": "netapp123",
+    "aggregate": "aggr1_01",
+    "storageprefix": ""
+
+}
