@@ -4,7 +4,7 @@ COPY startcont.sh /usr/bin/startcont.sh
 
 
 RUN cd /tmp && curl -O http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.1/swarm-client-2.1-jar-with-dependencies.jar && \
-    chmod +x /tmp/swarm-client-2.1-jar-with-dependencies.jar
+    chmod +x swarm-client-2.1-jar-with-dependencies.jar
 RUN apt-get update
 RUN apt-get install -y default-jdk
 RUN apt-get install -y python
