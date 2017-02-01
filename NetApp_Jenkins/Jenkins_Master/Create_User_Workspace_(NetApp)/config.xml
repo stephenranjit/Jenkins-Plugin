@@ -5,30 +5,21 @@
   <displayName>Create User Workspace (NetApp)</displayName>
   <attributes>
     <template-attribute>
-      <name>api</name>
-      <displayName>API Server (IP Address:Port)</displayName>
-      <helpHtml>Enter the IP Address and port of the API server. 
-
-Example: 192.168.10.10:1024</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
-    <template-attribute>
-      <name>cred</name>
-      <displayName>Select the APIs Username/Password</displayName>
-      <helpHtml>Select API Server Credential. 
-
-Make sure that API Server Credentials were already stored under Jenkins Global Credentials.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.CredentialsControl">
-        <kind>com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl</kind>
-      </control>
-    </template-attribute>
-    <template-attribute>
       <name>vs</name>
-      <displayName>SVM Name</displayName>
+      <displayName>Storage Tenant</displayName>
       <helpHtml>Provide the name of the SVM.
 
 SVM names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot; step.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
+      <control class="com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl">
+        <options>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>lab1</displayName>
+            <value>lab1</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+        </options>
+        <mode>DROPDOWN_LIST</mode>
+      </control>
     </template-attribute>
     <template-attribute>
       <name>ag</name>
@@ -36,7 +27,21 @@ SVM names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot
       <helpHtml>Provide the name of the Aggregate.
 
 Aggregate names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot; step.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
+      <control class="com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl">
+        <options>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>aggr1_01</displayName>
+            <value>aggr1_01</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>aggr1_02</displayName>
+            <value>aggr1_02</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+        </options>
+        <mode>DROPDOWN_LIST</mode>
+      </control>
     </template-attribute>
     <template-attribute>
       <name>bpname</name>
@@ -74,22 +79,14 @@ Make sure &quot;netappdvp_&quot; is added as the prefix to the name.</helpHtml>
       <helpHtml>Provide Group ID of Developer</helpHtml>
       <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
     </template-attribute>
-    <template-attribute>
-      <name>slimage</name>
-      <displayName>Slave Container Image Name</displayName>
-      <helpHtml>Provide the Slave Container Image Name. 
-
-Example: devopsnetapp/netapp-jenkins_slave</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
   </attributes>
   <properties/>
   <instantiable>true</instantiable>
   <help>This step will create a local workspace for the developers.</help>
   <transformer class="com.cloudbees.hudson.plugins.modeling.impl.builder.RuntimeGroovyShellScriptTransformer">
-    <script>python /tmp/ps/user_workspace_creation.py -v ${bpname} -a ${api} -s ${snap} -c ${lwsname} -apiuser ${cred.username} -apipass ${cred.password} -uid ${uid} -gid ${gid}
+    <script>python /tmp/ps/user_workspace_creation.py -v ${bpname} -a  \${APISERVER} -s ${snap} -c ${lwsname} -apiuser  \${APIUSER} -apipass \${APIPASS} -uid ${uid} -gid ${gid}
         
-python /tmp/ps/Jenkins_slave_create.py -i ${slimage} -c \${JOB_NAME} -l \${JOB_NAME} -p \${JOB_NAME} -v ${lwsname} -m \${JENKINS_URL}</script>
+python /tmp/ps/Jenkins_slave_create.py -i \${SLAVE} -c ${lwsname} -l ${lwsname} -p \${JOB_NAME} -v ${lwsname} -m \${JENKINS_URL}</script>
     <batch>false</batch>
     <sandbox>false</sandbox>
   </transformer>

@@ -5,30 +5,21 @@
   <displayName>Create CI Environment (NetApp)</displayName>
   <attributes>
     <template-attribute>
-      <name>api</name>
-      <displayName>API Server (IP Address:Port)</displayName>
-      <helpHtml>Enter the IP Address and port of the API server. 
-
-Example: 192.168.10.10:1024</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
-    <template-attribute>
-      <name>cred</name>
-      <displayName>Select API Server Credential</displayName>
-      <helpHtml>Select API Server Credential. 
-
-Make sure that API Server Credentials were already stored under Jenkins Global Credentials.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.CredentialsControl">
-        <kind>com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl</kind>
-      </control>
-    </template-attribute>
-    <template-attribute>
       <name>vs</name>
-      <displayName>SVM Name</displayName>
+      <displayName>Storage Tenant</displayName>
       <helpHtml>Provide the name of the SVM where the CI volume will be created. 
 
 SVM names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot; step.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
+      <control class="com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl">
+        <options>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>lab1</displayName>
+            <value>lab1</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+        </options>
+        <mode>DROPDOWN_LIST</mode>
+      </control>
     </template-attribute>
     <template-attribute>
       <name>ag</name>
@@ -36,7 +27,21 @@ SVM names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot
       <helpHtml>Provide the name of the Aggregate.
 
 Aggregate names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot; step.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
+      <control class="com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl">
+        <options>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>aggr1_01</displayName>
+            <value>aggr1_01</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>aggr1_02</displayName>
+            <value>aggr1_02</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+        </options>
+        <mode>DROPDOWN_LIST</mode>
+      </control>
     </template-attribute>
     <template-attribute>
       <name>bpname</name>
@@ -49,18 +54,6 @@ Example: netappdvp_ci_1</helpHtml>
       <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
     </template-attribute>
     <template-attribute>
-      <name>uid</name>
-      <displayName>User ID of CI Admin</displayName>
-      <helpHtml>Provide User ID of CI Admin</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
-    <template-attribute>
-      <name>gid</name>
-      <displayName>Group ID of CI Admin</displayName>
-      <helpHtml>Provide Group ID of CI Admin</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
-    <template-attribute>
       <name>size</name>
       <displayName>Volume Size of New CI Development Branch  (in MB)</displayName>
       <helpHtml>Provide the Volume Size of New CI Development Branch  (in MB)
@@ -68,20 +61,14 @@ Example: netappdvp_ci_1</helpHtml>
 Example: 512000</helpHtml>
       <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
     </template-attribute>
-    <template-attribute>
-      <name>slimage</name>
-      <displayName>Slave Docker Image</displayName>
-      <helpHtml>Enter the name of the image to run the slave docker container.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
   </attributes>
   <properties/>
   <instantiable>true</instantiable>
   <help>This step will create a Continuous Integration Environment , that will contain the source code along with the tools, compilers and rpms that might be necessary to build the code.</help>
   <transformer class="com.cloudbees.hudson.plugins.modeling.impl.builder.RuntimeGroovyShellScriptTransformer">
-    <script>python /tmp/ps/CI_dev_branch_create.py -v ${bpname} -a ${api} -apiuser ${cred.username} -apipass ${cred.password} -vs ${vs} -ag ${ag} -s ${size}  -uid ${uid} -gid ${gid}
+    <script>python /tmp/ps/CI_dev_branch_create.py -v ${bpname} -a  \${APISERVER} -apiuser  \${APIUSER} -apipass  \${APIPASS} -vs ${vs} -ag ${ag} -s ${size}  
 
-python /tmp/ps/Jenkins_slave_create.py -i ${slimage} -c \${JOB_NAME} -l \${JOB_NAME} -p \${JOB_NAME} -m \${JENKINS_URL} -v ${bpname}</script>
+python /tmp/ps/Jenkins_slave_create.py -i  \${SLAVE} -c \${JOB_NAME} -l \${JOB_NAME} -p \${JOB_NAME} -m \${JENKINS_URL} -v ${bpname}</script>
     <batch>false</batch>
     <sandbox>false</sandbox>
   </transformer>

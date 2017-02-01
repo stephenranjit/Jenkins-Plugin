@@ -1,7 +1,5 @@
 FROM java:8-jdk
 
-#RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-RUN apt-get clean
 RUN apt-get update && apt-get install -y git curl zip && rm -rf /var/lib/apt/lists/*
 RUN apt-get update
 RUN apt-get install -y sudo
@@ -22,8 +20,8 @@ RUN apt-get install -y docker-engine=1.11.2*
 
 # nDVP Installation
 # download and unpack the application
-RUN wget https://github.com/NetApp/netappdvp/releases/download/v1.2.1/netappdvp-1.2.1.tar.gz
-RUN tar zxf netappdvp-1.2.1.tar.gz
+RUN wget https://github.com/NetApp/netappdvp/releases/download/v1.3/netappdvp-1.3.tar.gz
+RUN tar zxf netappdvp-1.3.tar.gz
 
 # move to a location in the bin path
 RUN mv netappdvp /usr/local/bin
@@ -35,7 +33,7 @@ RUN mkdir -p /etc/netappdvp
 
 
 COPY ontap-nas.json /etc/netappdvp/ontap-nas.json
-#CMD netappdvp --config=/etc/netappdvp/ontap-nas.json &
+CMD netappdvp --config=/etc/netappdvp/ontap-nas.json &
 
 # Jenkins Installation
 

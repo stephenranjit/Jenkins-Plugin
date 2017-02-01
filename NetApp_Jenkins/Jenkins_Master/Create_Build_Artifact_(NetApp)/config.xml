@@ -5,24 +5,6 @@
   <displayName>Create Build Artifact (NetApp)</displayName>
   <attributes>
     <template-attribute>
-      <name>api</name>
-      <displayName>API Server (IP Address:Port)</displayName>
-      <helpHtml>Enter the IP Address and port of the API server. 
-
-Example: 192.168.10.10:1024</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
-    <template-attribute>
-      <name>cred</name>
-      <displayName>Select API Server Credential</displayName>
-      <helpHtml>Select API Server Credential. 
-
-Make sure that API Server Credentials were already stored under Jenkins Global Credentials.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.CredentialsControl">
-        <kind>com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl</kind>
-      </control>
-    </template-attribute>
-    <template-attribute>
       <name>check1</name>
       <displayName>Create a New Build Artifact Volume ?</displayName>
       <helpHtml>Check the box if a new build artifact volume needs to be created. 
@@ -44,11 +26,20 @@ But if the previous checkbox is unchecked then an existing Build Artifact with t
     </template-attribute>
     <template-attribute>
       <name>vs</name>
-      <displayName>Storage Tenant(NetApp):</displayName>
+      <displayName>Storage Tenant:</displayName>
       <helpHtml>Provide the name of the Storage Tenant i.e SVM.
 
 Storage Tenant names can be listed by using the &quot;List Storage Tenants and Aggregates (NetApp)&quot; step.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
+      <control class="com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl">
+        <options>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>lab1</displayName>
+            <value>lab1</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+        </options>
+        <mode>DROPDOWN_LIST</mode>
+      </control>
     </template-attribute>
     <template-attribute>
       <name>ag</name>
@@ -56,7 +47,21 @@ Storage Tenant names can be listed by using the &quot;List Storage Tenants and A
       <helpHtml>Provide the name of the Aggregate.
 
 Aggregate names can be listed by using the &quot;List SVM and Aggregates (NetApp)&quot; step.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
+      <control class="com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl">
+        <options>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>aggr1_01</displayName>
+            <value>aggr1_01</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+          <com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+            <displayName>aggr1_02</displayName>
+            <value>aggr1_02</value>
+            <inlineHelp></inlineHelp>
+          </com.cloudbees.hudson.plugins.modeling.controls.ChoiceControl_-Option>
+        </options>
+        <mode>DROPDOWN_LIST</mode>
+      </control>
     </template-attribute>
     <template-attribute>
       <name>size</name>
@@ -79,12 +84,6 @@ Checkpoint can be listed by using the &quot;List Checkpoint and Workspace (NetAp
       <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
     </template-attribute>
     <template-attribute>
-      <name>slimage</name>
-      <displayName>Slave Container Image Name</displayName>
-      <helpHtml>Provide Slave Container Image Name.</helpHtml>
-      <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
-    </template-attribute>
-    <template-attribute>
       <name>cont</name>
       <displayName>Name of the Build Archival Container</displayName>
       <helpHtml>This label name is used uniquely identify the slave container in the build archival execution step.</helpHtml>
@@ -96,9 +95,9 @@ Checkpoint can be listed by using the &quot;List Checkpoint and Workspace (NetAp
   <help>This step will set up a build artifactory volume.</help>
   <transformer class="com.cloudbees.hudson.plugins.modeling.impl.builder.RuntimeGroovyShellScriptTransformer">
     <script>if ${check1==true}; then
-    python /tmp/ps/Volume_create_ba.py -v ${vol} -a ${api} -ag ${ag} -vs ${vs} -s ${size} -apiuser ${cred.username} -apipass ${cred.password}
+    python /tmp/ps/Volume_create_ba.py -v ${vol} -a \${APISERVER} -ag ${ag} -vs ${vs} -s ${size} -apiuser \${APIUSER} -apipass \${APIPASS}
 fi
-python /tmp/ps/build_artifact_create.py -v ${base} -a ${api} -s ${snap} -apiuser ${cred.username} -apipass ${cred.password} -i ${slimage} -cont ${cont} -l ${cont} -volba ${vol}  -m \${JENKINS_URL}
+python /tmp/ps/build_artifact_create.py -v ${base} -a \${APISERVER} -s ${snap} -apiuser \${APIUSER} -apipass \${APIPASS} -i \${SLAVE} -cont ${cont} -l ${cont} -volba ${vol}  -m \${JENKINS_URL}
 
 </script>
     <batch>false</batch>

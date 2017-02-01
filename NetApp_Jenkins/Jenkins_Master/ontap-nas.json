@@ -1,12 +1,11 @@
 {
     "version": 1,
     "storageDriverName": "ontap-nas",
-    "managementLIF": "",
-    "dataLIF": "",
-    "svm": "",
-    "username": "",
-    "password": "",
-    "aggregate": "",
+    "managementLIF": "10.192.39.71",
+    "dataLIF": "10.192.39.72",
+    "svm": "lab1",
+    "username": "lab1",
+    "password": "netapp1!",
+    "aggregate": "aggr1_01",
     "storageprefix": ""
-
 }

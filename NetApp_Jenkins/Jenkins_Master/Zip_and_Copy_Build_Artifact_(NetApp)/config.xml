@@ -4,15 +4,12 @@
   <description>Zips the content and Archives it to Build Artifact.</description>
   <displayName>Zip and Copy Build Artifact (NetApp)</displayName>
   <attributes>
-
     <template-attribute>
       <name>zfile</name>
       <displayName>Zip File Name</displayName>
       <helpHtml>Provide name of the zip file to be created.</helpHtml>
       <control class="com.cloudbees.hudson.plugins.modeling.controls.TextFieldControl"/>
     </template-attribute>
-
- 
   </attributes>
   <properties/>
   <instantiable>true</instantiable>
@@ -20,7 +17,7 @@
   <transformer class="com.cloudbees.hudson.plugins.modeling.impl.builder.RuntimeGroovyShellScriptTransformer">
     <script>python /tmp/build_artifact_exec.py -z ${zfile}
 
- </script>
+python /tmp/clone_purge.py -a \${APISERVER} -apiuser \${APIUSER} -apipass \${APIPASS}</script>
     <batch>false</batch>
     <sandbox>false</sandbox>
   </transformer>
