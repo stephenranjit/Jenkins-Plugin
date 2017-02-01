@@ -1,20 +1,33 @@
-########################################################################################################################
-#                                                                                                                      #
-# NetApp -Jenkins Plugin using Docker container                                                                        #
-# Copyright 2016 NetApp, Inc.                                                                                          #
-#                                                                                                                      #
-# The python scripts in this folder and others, allow CI admin and the developer a plugin that integrates              #
-# with Cloudbees Jenkins Enterprise using NetApp ONTAP APIs to provide an automated continuous Integration (CI)        #
-# pipeline using Gitlab, Docker container and persistent storage using NetApp Docker Volume Plugin (nDVP) for ONTAP.   #
-#                                                                                                                      #
-# Maintained By:  Shrivatsa Upadhye (shrivatsa.upadhye@netapp.com)                                                     #
-#                 Akshay Patil (Akshay.Patil@netapp.com)                                                               #
-#                                                                                                                      #
-########################################################################################################################
-
-
+################################################################################
+# NetApp-Jenkins Integration Scripts
+#          This script was developed by NetApp to help demonstrate NetApp 
+#          technologies.  This script is not officially supported as a 
+#          standard NetApp product.
+#         
+# Purpose: Script to delete obsolete clones.
+#          
+#
+# Usage:   %> clone_purge.py <args> 
+#
+# Author:  Vishal Kumar S A (vishal.kumarsa@netapp.com)
+#           
+#
+# NETAPP CONFIDENTIAL
+# -------------------
+# Copyright 2016 NetApp, Inc. All Rights Reserved.
+#
+# NOTICE: All information contained herein is, and remains the property
+# of NetApp, Inc.  The intellectual and technical concepts contained
+# herein are proprietary to NetApp, Inc. and its suppliers, if applicable,
+# and may be covered by U.S. and Foreign Patents, patents in process, and are
+# protected by trade secret or copyright law. Dissemination of this
+# information or reproduction of this material is strictly forbidden unless
+# permission is obtained from NetApp, Inc.
+#
+################################################################################
 import base64
 import argparse
+import re
 import sys
 import requests
 import ssl
@@ -101,10 +114,17 @@ def clone_delete(clone_name):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Passing variables to the program')
     parser.add_argument('-a','--api', help='API server IP:port details',dest='api',required=True)
-    parser.add_argument('-c','--clone_name', help='Name of the clone to create',dest='clone_name',required=True)
-    parser.add_argument('-cnt','--cont', help='Name of the Container on which workspace is mounted',dest='cont',required=False)
+    #parser.add_argument('-c','--clone_name', help='Name of the clone to create',dest='clone_name',required=True)
+    #parser.add_argument('-cnt','--cont', help='Name of the Container on which workspace is mounted',dest='cont',required=False)
     parser.add_argument('-apiuser','--apiuser', help='Add APIServer Username',dest='apiuser',required=True)
     parser.add_argument('-apipass','--apipass', help='Add APIServer Password',dest='apipass',required=True)
+    out1 = subprocess.Popen(["df","|","grep","/tmp/vol2"],stdout=subprocess.PIPE).communicate()[0]
+    #print (out1)
+    out_clone=re.match(r'\AFilesystem.*[\r\n]+[^/]+/(\S+)', out1)
+    clone_name=str(out_clone.group(1))
+    print(clone_name)
+
     globals().update(vars(parser.parse_args()))
     clone_delete(clone_name)
+
     
