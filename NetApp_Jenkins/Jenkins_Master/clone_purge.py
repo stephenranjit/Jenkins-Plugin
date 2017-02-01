@@ -10,7 +10,7 @@
 # Usage:   %> clone_purge.py <args> 
 #
 # Author:  Vishal Kumar S A (vishal.kumarsa@netapp.com)
-#           
+#          Akshay Patil (Akshay.Patil@netapp.com) 
 #
 # NETAPP CONFIDENTIAL
 # -------------------
@@ -110,7 +110,7 @@ def clone_delete(clone_name):
     print "Clone deleted successfully"
 
     dock_cmd = "docker rm -f {}".format(cont)
-    return_code = subprocess.call(dock_cmd,shell=True)
+    return_code = subprocess.call(dock_cmd,shell=True,stderr=subprocess.STDOUT)
     print "Workspace container deleted successfully"
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@
 #
 # Usage:   %> build_artifact_container_purge.py <args>
 #
-# Author:  Vishal Kumar S A (vishal.kumarsa@netapp.com)
+# Author:  Akshay Patil (Akshay.Patil@netapp.com)
 #
 #
 # NETAPP CONFIDENTIAL
@@ -38,6 +38,6 @@ if __name__ == "__main__":
     parser.add_argument('-cnt','--cont', help='Name of the Container on which workspace is mounted',dest='cont',required=False)
     globals().update(vars(parser.parse_args()))
     dock_cmd = "docker rm -f {}".format(cont)
-    return_code = subprocess.call(dock_cmd,shell=True)
+    return_code = subprocess.call(dock_cmd,shell=True,stderr=subprocess.STDOUT)
     print "Temporary container deleted successfully"
 
